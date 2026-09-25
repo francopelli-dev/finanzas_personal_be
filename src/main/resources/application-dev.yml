@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/finanzas_personal
+    username: postgres
+    password: postgres

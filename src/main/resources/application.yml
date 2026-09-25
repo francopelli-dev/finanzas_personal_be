@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: finanzas-personal
+  profiles:
+    active: dev
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    driver-class-name: org.postgresql.Driver
