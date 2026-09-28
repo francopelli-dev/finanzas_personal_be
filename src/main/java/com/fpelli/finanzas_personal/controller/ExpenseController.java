@@ -1,5 +1,6 @@
 package com.fpelli.finanzas_personal.controller;
 
+import com.fpelli.finanzas_personal.dto.ExpenseTypeDTO;
 import com.fpelli.finanzas_personal.entity.ExpenseType;
 import com.fpelli.finanzas_personal.repository.ExpenseTypeRepository;
 import com.fpelli.finanzas_personal.service.ExpenseService;
@@ -7,9 +8,11 @@ import com.fpelli.finanzas_personal.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -18,24 +21,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class ExpenseController {
 
     private final ExpenseService expenseService;
-    private final ExpenseTypeRepository expenseTypeRepository;
 
 
 
-    @PostMapping("/expense-type/{name}")
-    public String postMethodName(@PathVariable String name) {
-        ExpenseType entity = new ExpenseType();
-        entity.setName(name);
-        entity.setVersion(1);
-        this.expenseTypeRepository.save(entity);
-        
-        return HttpStatus.OK.toString();
+    @PostMapping("/expense-type")
+    public ResponseEntity<ExpenseTypeDTO> createExpenseType(@RequestBody ExpenseTypeDTO dto) {;       
+        return ResponseEntity.ok(this.expenseService.saveExpenseType(dto));
+    }
+    @PutMapping("/expense-type")
+    public ResponseEntity<ExpenseTypeDTO> updateExpenseType(@RequestBody ExpenseTypeDTO dto) {;       
+        return ResponseEntity.ok(this.expenseService.saveExpenseType(dto));
     }
     @GetMapping("/expense-type/{id}")
-    public String getExpenseById(@PathVariable Long id) {
-        return this.expenseTypeRepository.getById(id)
-                .map(ExpenseType::getName)
-                .orElse("N/A");
+    public ResponseEntity<ExpenseTypeDTO> getExpenseById(@PathVariable Long id) {
+        return ResponseEntity.ok(this.expenseService.getExpenseTypeById(id));
     }
     
     
