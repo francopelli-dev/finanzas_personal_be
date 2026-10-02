@@ -22,10 +22,13 @@ public class Expense extends GenericEntity {
     private BigDecimal amount;
     private BigDecimal amountUSD;
     @Column(nullable = false)
-    private LocalDateTime date;
+    private LocalDateTime dateTime;
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name="expense_type_id", nullable = false)
     private ExpenseType expenseType;
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(name="payment_method_id", nullable = false)
+    private PaymentMethod paymentMethod;
     
     
     

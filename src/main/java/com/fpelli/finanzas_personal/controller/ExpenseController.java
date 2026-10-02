@@ -1,6 +1,9 @@
 package com.fpelli.finanzas_personal.controller;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fpelli.finanzas_personal.dto.ExpenseDTO;
@@ -60,5 +64,17 @@ public class ExpenseController {
         this.expenseTypeService.deleteExpenseTypeById(id);
         return ResponseEntity.noContent().build();
     }
-    
+
+
+    @GetMapping("/expense/by-date")
+    public ResponseEntity<List<ExpenseDTO>> listByDate(@RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month) {
+        return ResponseEntity.ok(this.expenseService.listByDate(month, year));
+    }
+    @GetMapping("/expense/count-per-hour")
+    public ResponseEntity<Map<Integer,Long>> countPerHour(@RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month){
+        YearMonth period = YearMonth.of(
+            year != null ? year : LocalDate.now().getYear(),
+            month != null ? month : LocalDate.now().getMonthValue());
+        return ResponseEntity.ok(expenseService.countExpensePerHour(period));
+    }
 }

@@ -1,5 +1,9 @@
 package com.fpelli.finanzas_personal.dto;
 
-public record ExpenseTypeDTO(Long id, String name, Integer version) {
+import jakarta.validation.constraints.NotBlank;
+
+public record ExpenseTypeDTO(Long id,
+        @NotBlank String name,
+        Integer version) {
 
 }

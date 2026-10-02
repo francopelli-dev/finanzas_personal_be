@@ -12,7 +12,8 @@ public class ExpenseMapper {
             entity.getAmount(),
             entity.getAmountUSD(),
             entity.getExpenseType().getId(),
-            entity.getExpenseType().getName()
+            entity.getExpenseType().getName(),
+            entity.getDateTime()
         );
     }
 

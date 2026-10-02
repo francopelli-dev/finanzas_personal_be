@@ -1,6 +1,7 @@
 package com.fpelli.finanzas_personal.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -10,5 +11,6 @@ public record ExpenseDTO(
         BigDecimal amount,
         BigDecimal amountUSD,
         @NotBlank Long expenseTypeId,
-        String expenseTypeName) {
+        String expenseTypeName,
+        LocalDateTime date) {
 }
