@@ -1,25 +1,60 @@
 package com.fpelli.finanzas_personal.service;
 
-import org.hibernate.service.spi.ServiceException;
-import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+import java.util.List;
 
-import com.fpelli.finanzas_personal.dto.ExpenseTypeDTO;
+import com.fpelli.finanzas_personal.dto.ExpenseDTO;
+import com.fpelli.finanzas_personal.entity.Expense;
 import com.fpelli.finanzas_personal.entity.ExpenseType;
+import com.fpelli.finanzas_personal.exception.ResourceNotFoundException;
+import com.fpelli.finanzas_personal.exception.ValidationException;
+import com.fpelli.finanzas_personal.mapper.ExpenseMapper;
+import com.fpelli.finanzas_personal.repository.ExpenseRepository;
 import com.fpelli.finanzas_personal.repository.ExpenseTypeRepository;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
-@Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ExpenseService {
+    private final ExpenseRepository expenseRepository;
     private final ExpenseTypeRepository expenseTypeRepository;
-    public ExpenseTypeDTO saveExpenseType(ExpenseTypeDTO dto) {
-        return expenseTypeRepository.save(dto.toEntity()).toDTO();
+
+    public ExpenseDTO createExpense(ExpenseDTO dto) {
+        validateAmounts(dto);
+        ExpenseType expenseTypeRef = expenseTypeRepository.getReferenceById(dto.expenseTypeId());
+        Expense entity = ExpenseMapper.toEntity(dto, expenseTypeRef);
+        entity.setDate(LocalDateTime.now());
+        return ExpenseMapper.toDTO(expenseRepository.save(entity));
     }
 
-    public ExpenseTypeDTO getExpenseTypeById(Long id) {
-        return expenseTypeRepository.findById(id)
-                                    .map(ExpenseType::toDTO)
-                                    .orElseThrow(() -> new ServiceException("Expense type not found"));
+    public ExpenseDTO updateExpense(ExpenseDTO dto, Long id) {
+        validateAmounts(dto);
+        ExpenseType expenseTypeRef = expenseTypeRepository.getReferenceById(dto.expenseTypeId());
+        Expense entity = ExpenseMapper.toEntity(dto, expenseTypeRef);
+        entity.setId(id);
+        return ExpenseMapper.toDTO(expenseRepository.save(entity));
+    }
+
+    public ExpenseDTO getExpenseById(Long id) {
+        return expenseRepository.findById(id)
+                .map(ExpenseMapper::toDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Expense not found"));
+    }
+
+    public List<ExpenseDTO> getAllExpenses() {
+        return expenseRepository.findAll()
+                .stream()
+                .map(ExpenseMapper::toDTO)
+                .toList();
+    }
+
+    public void deleteExpenseById(Long id) {
+        expenseRepository.deleteById(id);
+    }
+
+    private void validateAmounts(ExpenseDTO dto) {
+        if (dto.amount() == null && dto.amountUSD() == null) {
+            throw new ValidationException("At least one of amount or amountUSD must be provided");
+        }
     }
 }

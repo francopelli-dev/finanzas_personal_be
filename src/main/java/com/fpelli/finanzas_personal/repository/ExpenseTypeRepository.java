@@ -1,13 +1,14 @@
 package com.fpelli.finanzas_personal.repository;
 
-import java.util.Optional;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.Repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+
 
 
 import com.fpelli.finanzas_personal.entity.ExpenseType;
 
-public interface ExpenseTypeRepository extends CrudRepository<ExpenseType,Long> {
+public interface ExpenseTypeRepository extends JpaRepository<ExpenseType,Long> {
 
 }
