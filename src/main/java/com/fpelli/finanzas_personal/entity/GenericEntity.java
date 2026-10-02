@@ -22,5 +22,5 @@ public abstract class GenericEntity {
     @Version 
     private Integer version;
 
-    public abstract Record toDTO();
+
 }
